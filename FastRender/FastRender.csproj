@@ -17,4 +17,13 @@
     <Folder Include="ffmpeg\Images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="ffmpeg\ffmpeg.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ffmpeg\ffprobe.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

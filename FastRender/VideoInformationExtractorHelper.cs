@@ -4,6 +4,8 @@ using System.Drawing.Text;
 using System.IO;
 internal static class VideoInformationExtractorHelper
 {
+	private static string ffmpegPath = Path.Combine(Environment.CurrentDirectory, @"ffmpeg\", "ffmpeg.exe");
+	private static string ffprobePath = Path.Combine(Environment.CurrentDirectory, @"ffmpeg\", "ffprobe.exe");
 	public static (string, string, string) VidExtractor(string videoFilePath)
 	{
 		Process process = new Process();
@@ -22,7 +24,9 @@ internal static class VideoInformationExtractorHelper
 		{
 			StartInfo = new ProcessStartInfo
 			{
-				FileName = @"C:\Users\YS\source\repos\FastRender\FastRender\ffmpeg\ffprobe.exe",
+				FileName = ffmpegPath,
+				//FileName = @"../../ffmpeg/ffprobe.exe",
+				//FileName = @"C:\Users\YS\source\repos\FastRender\FastRender\ffmpeg\ffprobe.exe",
 				Arguments = stringArguments,
 				UseShellExecute = false,
 				RedirectStandardOutput = true,
@@ -50,7 +54,8 @@ internal static class VideoInformationExtractorHelper
 		{
 			StartInfo = new ProcessStartInfo
 			{
-				FileName = @"C:\Users\YS\source\repos\FastRender\FastRender\ffmpeg\ffmpeg.exe",
+				FileName = ffprobePath,
+				//FileName = @"C:\Users\YS\source\repos\FastRender\FastRender\ffmpeg\ffmpeg.exe",
 				Arguments = stringArguments,
 				UseShellExecute = false,
 				RedirectStandardOutput = true,

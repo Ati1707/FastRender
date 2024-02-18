@@ -3,7 +3,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:axis = "clr-namespace:VideoStateAxis" 
         mc:Ignorable="d"
         Title="FastRender" MinWidth="1000" MinHeight="600" Height="Auto" Width="Auto" Background="#31363b" >
     <StackPanel>
@@ -33,7 +32,6 @@
                 </Border>
             </Grid>
         </StackPanel>
-        <axis:VideoStateAxisControl x:Name="timeLine" Grid.Row="0" StartTime="{Binding StartTime}" EndTime="{Binding EndTime}" HisVideoSources="{Binding VideoHistoryList}" Grid.RowSpan="2" ></axis:VideoStateAxisControl>
         <Button Content="Button"/>
         <Border BorderThickness="20" BorderBrush="#1b1e20" Background="Black" />
         <Border BorderThickness="20" BorderBrush="DimGray" Background="Black" />

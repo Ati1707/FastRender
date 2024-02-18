@@ -54,7 +54,6 @@ namespace FastRender
 			// For demonstration purposes, let's assume you have a Video class with VideoThumbnail and VideoTitle properties.
 			var videoInfo = VideoInformationExtractorHelper.VidExtractor(filepath);
 			VideoList.Add(new Video { VideoThumbnail = videoInfo.Item1, VideoTitle = videoInfo.Item2, VideoDuration = videoInfo.Item3 });
-			timeLine.HisVideoSources = VideoList;
 			
 			videoListBox.Items.Refresh();
 
