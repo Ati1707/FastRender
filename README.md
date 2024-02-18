@@ -3,7 +3,7 @@
 Not usable yet still work in progress.
 
 What needs to be done:
-- [ ] Get video details proberly(getting duration doesnt work on other formats other than mp4?)
+- [ ] Get video details properly(getting duration doesnt work on other formats other than mp4?)
 - [ ] Fix the weird gap there is between the media element and the right border
 - [ ] Properly scale video editor when increasing/decreasing window size
 - [ ] Implement timeline
