@@ -1,0 +1,41 @@
+﻿<Window x:Class="FastRender.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:axis = "clr-namespace:VideoStateAxis" 
+        mc:Ignorable="d"
+        Title="FastRender" MinWidth="1000" MinHeight="600" Height="Auto" Width="Auto" Background="#31363b" >
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <ListBox 
+                        AllowDrop="True" 
+                        PreviewDragEnter="ListBox_PreviewDragEnter" 
+                        Drop="ListBox_Drop" 
+                        Background="#1b1e20"
+                        MinWidth="500" MinHeight="320" Height="500" Width="500" 
+                        Name="videoListBox" ItemsSource="{Binding videoList}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding VideoThumbnail}" Width="150" Height="75"/>
+                            <StackPanel>
+                                <TextBlock Foreground="AntiqueWhite" HorizontalAlignment="Center" VerticalAlignment="Top" Text="{Binding VideoTitle}"/>
+                                <TextBlock Foreground="AntiqueWhite" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding VideoDuration}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Grid MinWidth="200" Width="Auto" MaxWidth="1000" Height="Auto" MinHeight="300" MaxHeight="500">
+                <Border BorderThickness="5" BorderBrush="White" Background="Black">
+                    <MediaElement x:Name="mediaElement" Source="C:\Users\YS\Videos\test\2024-01-29 13-32-48.mp4"/>
+                </Border>
+            </Grid>
+        </StackPanel>
+        <axis:VideoStateAxisControl x:Name="timeLine" Grid.Row="0" StartTime="{Binding StartTime}" EndTime="{Binding EndTime}" HisVideoSources="{Binding VideoHistoryList}" Grid.RowSpan="2" ></axis:VideoStateAxisControl>
+        <Button Content="Button"/>
+        <Border BorderThickness="20" BorderBrush="#1b1e20" Background="Black" />
+        <Border BorderThickness="20" BorderBrush="DimGray" Background="Black" />
+    </StackPanel>
+</Window>
