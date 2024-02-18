@@ -28,7 +28,7 @@
             </ListBox>
             <Grid MinWidth="200" Width="Auto" MaxWidth="1000" Height="Auto" MinHeight="300" MaxHeight="500">
                 <Border BorderThickness="5" BorderBrush="White" Background="Black">
-                    <MediaElement x:Name="mediaElement" Source="C:\Users\YS\Videos\test\2024-01-29 13-32-48.mp4"/>
+                    <MediaElement x:Name="mediaElement" Source=""/>
                 </Border>
             </Grid>
         </StackPanel>

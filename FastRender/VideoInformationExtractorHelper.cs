@@ -24,9 +24,7 @@ internal static class VideoInformationExtractorHelper
 		{
 			StartInfo = new ProcessStartInfo
 			{
-				FileName = ffmpegPath,
-				//FileName = @"../../ffmpeg/ffprobe.exe",
-				//FileName = @"C:\Users\YS\source\repos\FastRender\FastRender\ffmpeg\ffprobe.exe",
+				FileName = ffprobePath,
 				Arguments = stringArguments,
 				UseShellExecute = false,
 				RedirectStandardOutput = true,
@@ -54,8 +52,7 @@ internal static class VideoInformationExtractorHelper
 		{
 			StartInfo = new ProcessStartInfo
 			{
-				FileName = ffprobePath,
-				//FileName = @"C:\Users\YS\source\repos\FastRender\FastRender\ffmpeg\ffmpeg.exe",
+				FileName = ffmpegPath,
 				Arguments = stringArguments,
 				UseShellExecute = false,
 				RedirectStandardOutput = true,
