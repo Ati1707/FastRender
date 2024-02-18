@@ -1,4 +1,4 @@
-![grafik](https://github.com/Ati1707/FastRender/assets/152104750/748aeaed-8626-4171-9c2e-b3b5e37f675f)# FastRender
+# FastRender
 
 Not usable yet still work in progress.
 
