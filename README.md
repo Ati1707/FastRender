@@ -13,7 +13,8 @@ What needs to be done:
 - [ ] Rewrite the image extractor part. Currently it gets the first frame of the video and stores it in a folder.
 
 This is how it currently looks like:
-![grafik](https://github.com/Ati1707/FastRender/assets/152104750/259ea0ce-104b-430d-ab50-c66dde939216)
+![grafik](https://github.com/Ati1707/FastRender/assets/152104750/473e9162-3398-480c-a64d-f3175bbdb300)
+
 
 My idea was to have a container type of thing at the top left where you can drag and drop the videos.
 Top right will have the video player itself and the bottom part will be timeline and the editor.
