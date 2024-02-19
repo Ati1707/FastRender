@@ -19,7 +19,7 @@ internal static class VideoInformationExtractorHelper
 	private static String GetVideoDuration(Process p, string videoFilePath)
 	{
 		String videoDuration = null;
-		String stringArguments = $"-v error -select_streams v:0 -show_entries stream=duration -of default=noprint_wrappers=1:nokey=1 \"{videoFilePath}\"";
+		String stringArguments = $"-v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 -sexagesimal \"{videoFilePath}\"";
 		p = new Process
 		{
 			StartInfo = new ProcessStartInfo
