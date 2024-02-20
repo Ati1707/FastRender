@@ -13,7 +13,7 @@ What needs to be done:
 - [ ] Rewrite the image extractor part. Currently it gets the first frame of the video and stores it in a folder.
 
 This is how it currently looks like:
-![grafik](https://github.com/Ati1707/FastRender/assets/152104750/581291ba-9231-4df7-bd58-ac9ca1709e9f)
+![grafik](https://github.com/Ati1707/FastRender/assets/152104750/7b4417c1-5c4d-4d5c-a10d-d13a6e91b2cb)
 
 
 
