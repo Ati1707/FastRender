@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using TimelineEntryControl;
@@ -55,10 +57,19 @@ namespace FastRender
 			// For demonstration purposes, let's assume you have a Video class with VideoThumbnail and VideoTitle properties.
 			var videoInfo = VideoInformationExtractorHelper.VidExtractor(filepath);
 			VideoList.Add(new Video { VideoThumbnail = videoInfo.Item1, VideoTitle = videoInfo.Item2, VideoDuration = videoInfo.Item3 });
-			
+
 			videoListBox.Items.Refresh();
 
 		}
+		
+			void Window_Closing(object sender, CancelEventArgs e)
+			{
+				System.IO.DirectoryInfo imageDirectory = new DirectoryInfo("Images");
+				foreach (FileInfo file in imageDirectory.GetFiles())
+				{
+					file.Delete();
+				}
+			}
 
 	}
 	public class Video
@@ -69,4 +80,6 @@ namespace FastRender
 		public required string VideoDuration { get; set; }
 		public override string ToString() => this.VideoTitle;
 	}
+
+
 }

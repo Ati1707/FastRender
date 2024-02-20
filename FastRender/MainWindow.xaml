@@ -4,6 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TimelineEntryControl"
+        Closing="Window_Closing"
         mc:Ignorable="d"
         Title="FastRender" MinWidth="1000" MinHeight="600" Height="Auto" Width="Auto" Background="#31363b" >
     <StackPanel>
@@ -29,7 +30,7 @@
             </ListBox>
             <Grid MinWidth="200" Width="Auto" MaxWidth="1000" Height="Auto" MinHeight="300" MaxHeight="500">
                 <Border BorderThickness="5" BorderBrush="White" Background="Black">
-                    <MediaElement x:Name="mediaElement" Source=""/>
+                    <MediaElement x:Name="mediaElement" Source="C:\Users\YS\Videos\test\2024-01-29 13-32-48.mp4"/>
                 </Border>
             </Grid>
         </StackPanel>
