@@ -8,13 +8,17 @@
         mc:Ignorable="d"
         Title="FastRender" MinWidth="1000" MinHeight="600" Height="Auto" Width="Auto" Background="#31363b" >
     <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <ListBox 
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ListBox Grid.Column="0"
                         AllowDrop="True" 
                         PreviewDragEnter="ListBox_PreviewDragEnter" 
                         Drop="ListBox_Drop" 
                         Background="#1b1e20"
-                        MinWidth="500" MinHeight="320" Height="500" Width="500" 
+                        MinWidth="500" MinHeight="320" Height="Auto" Width="500" 
                         Name="videoListBox" ItemsSource="{Binding videoList}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -28,12 +32,10 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Grid MinWidth="200" Width="Auto" MaxWidth="1000" Height="Auto" MinHeight="300" MaxHeight="500">
-                <Border BorderThickness="5" BorderBrush="White" Background="Black">
-                    <MediaElement x:Name="mediaElement" Source="C:\Users\YS\Videos\test\2024-01-29 13-32-48.mp4"/>
-                </Border>
-            </Grid>
-        </StackPanel>
+            <Border Grid.Column="1" BorderThickness="5" BorderBrush="White" Background="Black">
+                <MediaElement x:Name="mediaElement" HorizontalAlignment="Right" Source="C:\Users\YS\Videos\test\2024-01-29 13-32-48.mp4"/>
+            </Border>
+        </Grid>
         <local:TimelineEntryControl/>
         <!--<Border>
         <Button Content="Button" Width="50"/>
