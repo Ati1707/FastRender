@@ -3,9 +3,10 @@
 Not usable yet still work in progress.
 
 What needs to be done:
-- [ ] Get video details properly(getting duration doesnt work on other formats other than mp4?)
-- [ ] Fix the weird gap there is between the media element and the right border
-- [ ] Properly scale video editor when increasing/decreasing window size
+- [x] Get video details properly(getting duration doesnt work on other formats other than mp4?)
+      -  MP4 and MKV works I didnt test other formats.
+- [x] Fix the weird gap there is between the media element and the right border
+- [x] Properly scale video editor when increasing/decreasing window size
 - [ ] Implement timeline
 - [ ] Implement the editor
 - [ ] Add hotkeys for the editor
