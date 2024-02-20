@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using TimelineEntryControl;
 
 namespace FastRender
@@ -51,12 +53,27 @@ namespace FastRender
 			}
 		}
 
+		void videoListBox_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			DependencyObject obj = (DependencyObject)e.OriginalSource;
+
+			while (obj != null && obj != videoListBox)
+			{
+				if (obj.GetType() == typeof(ListBoxItem))
+				{
+					mediaElement.Source = new System.Uri(((sender as ListBox).SelectedItem as Video).VideoPath);
+					break;
+				}
+				obj = VisualTreeHelper.GetParent(obj);
+			}
+		}
+
 		private void AddVideoFromFile(String filepath)
 		{
 			// Add logic to extract video information and add it to your VideoList
 			// For demonstration purposes, let's assume you have a Video class with VideoThumbnail and VideoTitle properties.
 			var videoInfo = VideoInformationExtractorHelper.VidExtractor(filepath);
-			VideoList.Add(new Video { VideoThumbnail = videoInfo.Item1, VideoTitle = videoInfo.Item2, VideoDuration = videoInfo.Item3 });
+			VideoList.Add(new Video { VideoThumbnail = videoInfo.Item1, VideoTitle = videoInfo.Item2, VideoDuration = videoInfo.Item3 , VideoPath = filepath});
 
 			videoListBox.Items.Refresh();
 
@@ -78,6 +95,7 @@ namespace FastRender
 		public required string VideoThumbnail { get; set; }
 		public required string VideoTitle { get; set; }
 		public required string VideoDuration { get; set; }
+		public required string VideoPath {  get; set; }
 		public override string ToString() => this.VideoTitle;
 	}
 

@@ -15,7 +15,8 @@
             </Grid.ColumnDefinitions>
             <ListBox Grid.Column="0"
                         AllowDrop="True" 
-                        PreviewDragEnter="ListBox_PreviewDragEnter" 
+                        PreviewDragEnter="ListBox_PreviewDragEnter"
+                        MouseDoubleClick="videoListBox_MouseDoubleClick"
                         Drop="ListBox_Drop" 
                         Background="#1b1e20"
                         MinWidth="500" MinHeight="320" Height="Auto" Width="500" 
@@ -33,7 +34,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <Border Grid.Column="1" BorderThickness="5" BorderBrush="White" Background="Black">
-                <MediaElement x:Name="mediaElement" HorizontalAlignment="Right" Source="C:\Users\YS\Videos\test\2024-01-29 13-32-48.mp4"/>
+                <MediaElement x:Name="mediaElement" HorizontalAlignment="Right" Source=""/>
             </Border>
         </Grid>
         <local:TimelineEntryControl/>
