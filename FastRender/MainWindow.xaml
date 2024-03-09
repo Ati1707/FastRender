@@ -7,8 +7,8 @@
         Closing="Window_Closing"
         mc:Ignorable="d"
         Title="FastRender" MinWidth="1000" MinHeight="600" Height="Auto" Width="Auto" Background="#31363b" >
-    <StackPanel>
-        <Grid>
+    <DockPanel>
+        <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -37,11 +37,36 @@
                 <MediaElement x:Name="mediaElement" HorizontalAlignment="Right" Source=""/>
             </Border>
         </Grid>
-        <local:TimelineEntryControl/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Rectangle Grid.Row="0" Grid.Column="0" Fill="#1b1e20"/>
+            <local:TimelineEntryControl DockPanel.Dock="Top" Grid.Row="0" Grid.Column="1" />
+            <Border Grid.Row="1" BorderThickness="1" BorderBrush="Black">
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="VIDEO" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <Border Grid.Row="1" Grid.Column="1" BorderThickness="1" BorderBrush="Black">
+                <Rectangle  Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Height="Auto" Fill="#FF1E2225"></Rectangle>
+            </Border>
+            <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black">
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="AUDIO" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <Border Grid.Row="2" Grid.Column="1" BorderThickness="1" BorderBrush="Black">
+                <Rectangle Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Height="Auto" Fill="#FF24282D"></Rectangle>
+            </Border>
+        </Grid>
+
         <!--<Border>
         <Button Content="Button" Width="50"/>
         </Border>
         <Border BorderThickness="20" BorderBrush="#1b1e20" Background="Black" />
         <Border BorderThickness="20" BorderBrush="DimGray" Background="Black" />-->
-    </StackPanel>
+    </DockPanel>
 </Window>
