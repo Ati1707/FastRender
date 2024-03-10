@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using TimelineEntryControl;
 
 namespace FastRender
@@ -15,6 +18,8 @@ namespace FastRender
 	public partial class MainWindow : Window
 	{
 		public List<Video> VideoList = new List<Video>();
+		private bool isDragging;
+		private Point startPoint;
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -68,6 +73,14 @@ namespace FastRender
 			}
 		}
 
+		void ListBoxItem_MouseLeftButtonDown(object sender, MouseEventArgs e)
+		{
+			if (e.OriginalSource is FrameworkElement element && element.DataContext is Video video)
+			{
+				startPoint = e.GetPosition(null);
+				isDragging = true;
+			}
+		}
 		private void AddVideoFromFile(String filepath)
 		{
 			// Add logic to extract video information and add it to your VideoList
@@ -88,6 +101,34 @@ namespace FastRender
 				}
 			}
 
+
+		private void videoListBox_PreviewMouseMove(object sender, MouseEventArgs e)
+		{
+			if (isDragging && e.LeftButton == MouseButtonState.Pressed)
+			{
+				ListBox box = sender as ListBox;
+				Video video = box.SelectedItem as Video;
+				DragDrop.DoDragDrop(box,video, DragDropEffects.Copy);
+			}
+		}
+
+		private string GetThumbnailPathForDraggedVideo(Video video)
+		{
+			return video.VideoThumbnail;
+		}
+
+		private void Rectangle_Drop(object sender, DragEventArgs e)
+		{
+			object data = e.Data.GetData(typeof(Video));
+			if (data != null) { 
+				Video video = data as Video;
+				Image thumbnail = new Image();
+				thumbnail.Source = new BitmapImage(new Uri(video.VideoThumbnail));
+				videoPanel.Children.Add(thumbnail);
+
+			}
+		}
+
 	}
 	public class Video
 	{
@@ -98,6 +139,5 @@ namespace FastRender
 		public required string VideoPath {  get; set; }
 		public override string ToString() => this.VideoTitle;
 	}
-
 
 }

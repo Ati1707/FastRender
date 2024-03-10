@@ -17,10 +17,17 @@
                         AllowDrop="True" 
                         PreviewDragEnter="ListBox_PreviewDragEnter"
                         MouseDoubleClick="videoListBox_MouseDoubleClick"
+                        PreviewMouseMove="videoListBox_PreviewMouseMove"
                         Drop="ListBox_Drop" 
                         Background="#1b1e20"
                         MinWidth="500" MinHeight="320" Height="Auto" Width="500" 
                         Name="videoListBox" ItemsSource="{Binding videoList}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListBoxItem_MouseLeftButtonDown"/>
+
+                    </Style>
+                </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -47,13 +54,15 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <Rectangle Grid.Row="0" Grid.Column="0" Fill="#1b1e20"/>
+            <Rectangle AllowDrop="True" Grid.Row="0" Grid.Column="0" Fill="#1b1e20"/>
             <local:TimelineEntryControl DockPanel.Dock="Top" Grid.Row="0" Grid.Column="1" />
             <Border Grid.Row="1" BorderThickness="1" BorderBrush="Black">
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="VIDEO" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="VIDEO" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
             <Border Grid.Row="1" Grid.Column="1" BorderThickness="1" BorderBrush="Black">
-                <Rectangle  Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Height="Auto" Fill="#FF1E2225"></Rectangle>
+                <StackPanel x:Name="videoPanel" Orientation="Horizontal" AllowDrop="True" DragDrop.Drop="Rectangle_Drop"  Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Height="Auto" Background="#FF1E2225">
+                    <TextBlock Text="TEST"></TextBlock>
+                </StackPanel>
             </Border>
             <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black">
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="AUDIO" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
