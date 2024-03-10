@@ -15,8 +15,9 @@ What needs to be done:
 - [ ] More robust process for ffmpeg/ffmprobe binaries. Maybe even integrate libraries instead?
 - [ ] Rewrite the image extractor part. Currently it gets the first frame of the video and stores it in a folder.
 
-This is how it currently looks like:
-![grafik](https://github.com/Ati1707/FastRender/assets/152104750/7b4417c1-5c4d-4d5c-a10d-d13a6e91b2cb)
+This is how it currently looks like 03.10.2024:
+![grafik](https://github.com/Ati1707/FastRender/assets/152104750/8220b36a-2f92-4e5b-9d52-86508da77380)
+
 
 
 
