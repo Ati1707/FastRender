@@ -7,12 +7,16 @@
         Closing="Window_Closing"
         mc:Ignorable="d"
         Title="FastRender" MinWidth="1000" MinHeight="600" Height="Auto" Width="Auto" Background="#31363b" >
-    <DockPanel>
+    <DockPanel LastChildFill="false">
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
             <ListBox Grid.Column="0"
                         AllowDrop="True" 
                         PreviewDragEnter="ListBox_PreviewDragEnter"
@@ -40,11 +44,18 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Border Grid.Column="1" BorderThickness="5" BorderBrush="White" Background="Black">
-                <MediaElement x:Name="mediaElement" HorizontalAlignment="Right" Source=""/>
+            <Border Grid.Column="1" BorderThickness="5" BorderBrush="DarkSlateGray">
+                <MediaElement x:Name="mediaElement" HorizontalAlignment="Right" Source="" Height="Auto" Width="Auto"/>
             </Border>
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="1" Grid.Row="2">
+                <TextBlock Foreground="White" Margin="5"  VerticalAlignment="Center">Seek To</TextBlock>
+                <Slider Name="timelineSlider" Margin="5" Thumb.DragCompleted="timelineSlider_DragCompleted" Maximum="100" Value="1" Width="200"/>
+                <TextBlock  Grid.Row="2" Foreground="White" VerticalAlignment="Center" Margin="5"  >Volume</TextBlock>
+                <Slider Grid.Row="2" Name="volumeSlider" VerticalAlignment="Center" ValueChanged="ChangeMediaVolume" 
+       Minimum="0" Maximum="100" Value="0.5" Width="70"/>
+            </StackPanel>
         </Grid>
-        <Grid>
+        <Grid DockPanel.Dock="Top" MinHeight="200" MaxHeight="300">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="90"/>
                 <ColumnDefinition/>
@@ -54,14 +65,13 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <Rectangle AllowDrop="True" Grid.Row="0" Grid.Column="0" Fill="#1b1e20"/>
-            <local:TimelineEntryControl DockPanel.Dock="Top" Grid.Row="0" Grid.Column="1" />
+            <Rectangle  AllowDrop="True" Grid.Row="0" Grid.Column="0" Fill="#1b1e20"/>
+            <local:TimelineEntryControl Grid.Row="0" Grid.Column="1" />
             <Border Grid.Row="1" BorderThickness="1" BorderBrush="Black">
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="VIDEO" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="VIDEO" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
             <Border Grid.Row="1" Grid.Column="1" BorderThickness="1" BorderBrush="Black">
-                <StackPanel x:Name="videoPanel" Orientation="Horizontal" AllowDrop="True" DragDrop.Drop="Rectangle_Drop"  Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Height="Auto" Background="#FF1E2225">
-                    <TextBlock Text="TEST"></TextBlock>
+                <StackPanel x:Name="videoPanel" Orientation="Horizontal" AllowDrop="True" DragDrop.Drop="Rectangle_Drop"  Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Background="#FF1E2225">
                 </StackPanel>
             </Border>
             <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black">
@@ -71,11 +81,5 @@
                 <Rectangle Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Height="Auto" Fill="#FF24282D"></Rectangle>
             </Border>
         </Grid>
-
-        <!--<Border>
-        <Button Content="Button" Width="50"/>
-        </Border>
-        <Border BorderThickness="20" BorderBrush="#1b1e20" Background="Black" />
-        <Border BorderThickness="20" BorderBrush="DimGray" Background="Black" />-->
     </DockPanel>
 </Window>
