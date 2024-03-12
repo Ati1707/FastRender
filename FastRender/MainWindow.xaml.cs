@@ -21,6 +21,7 @@ namespace FastRender
 		public List<Video> VideoList = new List<Video>();
 		private bool isDragging;
 		private bool isDragCompleted;
+		private bool isMediaLoaded;
 		private Point startPoint;
 		DispatcherTimer timer;
 		public MainWindow()
@@ -37,12 +38,15 @@ namespace FastRender
 
 		private void timer_Tick(object sender, EventArgs e)
 		{
+			if (isMediaLoaded) {
 			var mediaDuration = mediaElement.NaturalDuration.TimeSpan.TotalMilliseconds;
 			var mediaElapsedTime = mediaElement.Position.TotalMilliseconds;
 			timelineSlider.Value = (100 * mediaElapsedTime) / mediaDuration;
 			if(timelineSlider.Value == 100)
 			{
 				timer.Stop();
+				isMediaLoaded = false;
+			}
 			}
 		}
 		private void ListBox_PreviewDragEnter(object sender, DragEventArgs e)
@@ -88,6 +92,7 @@ namespace FastRender
 				}
 				obj = VisualTreeHelper.GetParent(obj);
 			}
+			mediaElement.Play();
 		}
 
 		void ListBoxItem_MouseLeftButtonDown(object sender, MouseEventArgs e)
@@ -171,6 +176,7 @@ namespace FastRender
 			if(SliderValue != 100)
 			{
 				timer.Start();
+				isMediaLoaded = true;
 			}
 		}
 
@@ -182,6 +188,17 @@ namespace FastRender
 		private void mediaElement_MediaOpened(object sender, RoutedEventArgs e)
 		{
 			timer.Start();
+			videoTotalDuration.Text = mediaElement.NaturalDuration.ToString();
+			isMediaLoaded = true;
+		}
+
+		private void OnMouseDownPlayMedia(object sender, MouseButtonEventArgs e)
+		{
+			mediaElement.Play();
+		}
+		private void OnMouseDownPauseMedia(object sender, MouseButtonEventArgs e)
+		{
+			mediaElement.Pause();
 		}
 	}
 

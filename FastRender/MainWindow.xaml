@@ -45,13 +45,20 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <Border Grid.Column="1" BorderThickness="5" BorderBrush="DarkSlateGray">
-                <MediaElement x:Name="mediaElement" HorizontalAlignment="Center" MediaOpened="mediaElement_MediaOpened" Source="" MaxHeight="700" />
+                <MediaElement x:Name="mediaElement" HorizontalAlignment="Center" LoadedBehavior="Manual" MediaOpened="mediaElement_MediaOpened" Source="" MaxHeight="700" />
             </Border>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="1" Grid.Row="2">
+                <Button Background="Transparent" BorderBrush="Transparent" Margin="5">
+                    <Image Source="assets/play_button.png" Height="25" MouseLeftButtonDown="OnMouseDownPlayMedia"/>
+                </Button>
+                <Button Background="Transparent" BorderBrush="Transparent" Margin="5">
+                    <Image Source="assets/pause_button.png" Height="25" MouseLeftButtonDown="OnMouseDownPauseMedia"/>
+                </Button>
                 <TextBlock Foreground="White" Margin="5"  VerticalAlignment="Center">Seek To</TextBlock>
                 <Slider Name="timelineSlider" Margin="5" Thumb.DragCompleted="timelineSlider_DragCompleted" Maximum="100" Value="1" Width="200"/>
-                <TextBlock  Grid.Row="2" Foreground="White" VerticalAlignment="Center" Margin="5"  >Volume</TextBlock>
-                <Slider Grid.Row="2" Name="volumeSlider" VerticalAlignment="Center" ValueChanged="ChangeMediaVolume" 
+                <TextBlock x:Name="videoTotalDuration" Text="00:00" Foreground="White" Margin="5"/>
+                <TextBlock Foreground="White" VerticalAlignment="Center" Margin="5"  >Volume</TextBlock>
+                <Slider Name="volumeSlider" VerticalAlignment="Center" ValueChanged="ChangeMediaVolume" 
        Minimum="0" Maximum="10" Value="5" Width="70"/>
             </StackPanel>
         </Grid>
