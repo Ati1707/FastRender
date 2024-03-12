@@ -26,6 +26,7 @@ namespace FastRender
 		private bool isMediaLoaded;
 		DispatcherTimer timer;
 		private double nextLeftPosition = 0;
+		private Border border = new Border();
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -154,41 +155,43 @@ namespace FastRender
 				rightBorder.Fill = new BrushConverter().ConvertFrom("#FF2F2F2F") as System.Windows.Media.Brush;
 				Video video = data as Video;
 				TimeSpan test = TimeSpan.Parse(video.VideoDuration);
-				Debug.WriteLine(test.TotalMilliseconds);
 				System.Windows.Controls.Image thumbnail = new System.Windows.Controls.Image();
 				thumbnail.Source = new BitmapImage(new Uri(video.VideoThumbnail));
 				Border rect = new Border();
 				rect.Height = 90;
 				rect.Width = test.Milliseconds;
 				rect.Background = new BrushConverter().ConvertFrom("#FF0E2137") as System.Windows.Media.Brush;
-				rect.BorderBrush = new SolidColorBrush(Colors.Black);
+				rect.BorderBrush = new BrushConverter().ConvertFrom("#0099ff") as System.Windows.Media.Brush;
+				rect.BorderThickness = new Thickness(1,1,1,1);
 				TextBlock videoTitle = new TextBlock();
 				videoTitle.Text = video.VideoTitle;
 				videoTitle.Foreground = new SolidColorBrush(Colors.Black);
 				videoTitle.TextAlignment = TextAlignment.Left;
-				Grid grid = new Grid();
-				RowDefinition textRow = new RowDefinition();
-				textRow.Height = new GridLength(20, GridUnitType.Pixel);
-				grid.RowDefinitions.Add(textRow);
-				grid.RowDefinitions.Add(new RowDefinition());
-				Grid.SetRow(videoTitle, 0);
-				//grid.Children.Add(videoTitle);
-				Grid.SetRow(thumbnail, 1);
-				//grid.Children.Add(thumbnail);
-				//rect.Child = grid;
 				DockPanel dockPanel = new DockPanel();
 				DockPanel.SetDock(leftBorder, Dock.Left);
-				dockPanel.Children.Add(leftBorder);
+				//dockPanel.Children.Add(leftBorder);
 				DockPanel.SetDock(rightBorder, Dock.Right);
-				dockPanel.Children.Add(rightBorder);
+				//dockPanel.Children.Add(rightBorder);
 				DockPanel.SetDock(videoTitle, Dock.Top);
 				dockPanel.Children.Add(videoTitle);
 				dockPanel.Children.Add(thumbnail);
+				rect.MouseLeftButtonDown += new MouseButtonEventHandler(videoPanel_MouseLeftButtonDown);
 				rect.Child = dockPanel;
 				Canvas.SetLeft(rect, nextLeftPosition);
 				videoGrid.Children.Add(rect);
 				nextLeftPosition += rect.Width;
 			}
+		}
+		private void videoPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if(border != sender as Border)
+			{
+				border.BorderBrush = new BrushConverter().ConvertFrom("#0099ff") as System.Windows.Media.Brush;
+				border = sender as Border;
+				border.BorderBrush = new BrushConverter().ConvertFrom("#ff3300") as System.Windows.Media.Brush;
+			}
+			
+
 		}
 
 
