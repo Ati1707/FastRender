@@ -69,8 +69,8 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="90"/>
+                <RowDefinition Height="90"/>
             </Grid.RowDefinitions>
             <Rectangle  AllowDrop="True" Grid.Row="0" Grid.Column="0" Fill="#1b1e20"/>
             <local:TimelineEntryControl Grid.Row="0" Grid.Column="1" />
@@ -78,8 +78,8 @@
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="VIDEO" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
             <Border Grid.Row="1" Grid.Column="1" BorderThickness="1" BorderBrush="Black">
-                <StackPanel x:Name="videoPanel" Orientation="Horizontal" AllowDrop="True" DragDrop.Drop="Rectangle_Drop"  Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Background="#FF1E2225">
-                </StackPanel>
+                <Canvas HorizontalAlignment="Stretch" MaxHeight="90" x:Name="videoGrid" AllowDrop="True" DragDrop.Drop="Rectangle_Drop" Grid.Row="1" Grid.Column="1" Background="#FF1E2225">
+                </Canvas>
             </Border>
             <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black">
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="AUDIO" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>

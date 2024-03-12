@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -10,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using TimelineEntryControl;
+using static System.Net.WebRequestMethods;
 
 namespace FastRender
 {
@@ -22,8 +24,8 @@ namespace FastRender
 		private bool isDragging;
 		private bool isDragCompleted;
 		private bool isMediaLoaded;
-		private Point startPoint;
 		DispatcherTimer timer;
+		private double nextLeftPosition = 0;
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -99,7 +101,6 @@ namespace FastRender
 		{
 			if (e.OriginalSource is FrameworkElement element && element.DataContext is Video video)
 			{
-				startPoint = e.GetPosition(null);
 				isDragging = true;
 			}
 		}
@@ -144,11 +145,49 @@ namespace FastRender
 			object data = e.Data.GetData(typeof(Video));
 			if (data != null)
 			{
+				// < Rectangle Grid.Column = "0" Grid.Row = "2" HorizontalAlignment = "Left" VerticalAlignment = "Bottom" Height = "22" Width = "3" Fill = "#FF2F2F2F" />
+				System.Windows.Shapes.Rectangle leftBorder = new System.Windows.Shapes.Rectangle();
+				System.Windows.Shapes.Rectangle rightBorder = new System.Windows.Shapes.Rectangle();
+				leftBorder.Width = 3;
+				rightBorder.Width = 3;
+				leftBorder.Fill = new BrushConverter().ConvertFrom("#FF2F2F2F") as System.Windows.Media.Brush;
+				rightBorder.Fill = new BrushConverter().ConvertFrom("#FF2F2F2F") as System.Windows.Media.Brush;
 				Video video = data as Video;
-				Image thumbnail = new Image();
+				TimeSpan test = TimeSpan.Parse(video.VideoDuration);
+				Debug.WriteLine(test.TotalMilliseconds);
+				System.Windows.Controls.Image thumbnail = new System.Windows.Controls.Image();
 				thumbnail.Source = new BitmapImage(new Uri(video.VideoThumbnail));
-				videoPanel.Children.Add(thumbnail);
-
+				Border rect = new Border();
+				rect.Height = 90;
+				rect.Width = test.Milliseconds;
+				rect.Background = new BrushConverter().ConvertFrom("#FF0E2137") as System.Windows.Media.Brush;
+				rect.BorderBrush = new SolidColorBrush(Colors.Black);
+				TextBlock videoTitle = new TextBlock();
+				videoTitle.Text = video.VideoTitle;
+				videoTitle.Foreground = new SolidColorBrush(Colors.Black);
+				videoTitle.TextAlignment = TextAlignment.Left;
+				Grid grid = new Grid();
+				RowDefinition textRow = new RowDefinition();
+				textRow.Height = new GridLength(20, GridUnitType.Pixel);
+				grid.RowDefinitions.Add(textRow);
+				grid.RowDefinitions.Add(new RowDefinition());
+				Grid.SetRow(videoTitle, 0);
+				//grid.Children.Add(videoTitle);
+				Grid.SetRow(thumbnail, 1);
+				//grid.Children.Add(thumbnail);
+				//rect.Child = grid;
+				DockPanel dockPanel = new DockPanel();
+				DockPanel.SetDock(leftBorder, Dock.Left);
+				dockPanel.Children.Add(leftBorder);
+				DockPanel.SetDock(rightBorder, Dock.Right);
+				dockPanel.Children.Add(rightBorder);
+				DockPanel.SetDock(videoTitle, Dock.Top);
+				dockPanel.Children.Add(videoTitle);
+				dockPanel.Children.Add(thumbnail);
+				rect.Child = dockPanel;
+				Canvas.SetLeft(rect, nextLeftPosition);
+				videoGrid.Children.Add(rect);
+				nextLeftPosition += rect.Width;
 			}
 		}
 
