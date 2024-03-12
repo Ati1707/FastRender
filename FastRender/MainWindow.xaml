@@ -45,14 +45,14 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <Border Grid.Column="1" BorderThickness="5" BorderBrush="DarkSlateGray">
-                <MediaElement x:Name="mediaElement" HorizontalAlignment="Right" Source="" Height="Auto" Width="Auto"/>
+                <MediaElement x:Name="mediaElement" HorizontalAlignment="Center" MediaOpened="mediaElement_MediaOpened" Source="" MaxHeight="700" />
             </Border>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="1" Grid.Row="2">
                 <TextBlock Foreground="White" Margin="5"  VerticalAlignment="Center">Seek To</TextBlock>
                 <Slider Name="timelineSlider" Margin="5" Thumb.DragCompleted="timelineSlider_DragCompleted" Maximum="100" Value="1" Width="200"/>
                 <TextBlock  Grid.Row="2" Foreground="White" VerticalAlignment="Center" Margin="5"  >Volume</TextBlock>
                 <Slider Grid.Row="2" Name="volumeSlider" VerticalAlignment="Center" ValueChanged="ChangeMediaVolume" 
-       Minimum="0" Maximum="100" Value="0.5" Width="70"/>
+       Minimum="0" Maximum="10" Value="5" Width="70"/>
             </StackPanel>
         </Grid>
         <Grid DockPanel.Dock="Top" MinHeight="200" MaxHeight="300">
@@ -62,8 +62,8 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Rectangle  AllowDrop="True" Grid.Row="0" Grid.Column="0" Fill="#1b1e20"/>
             <local:TimelineEntryControl Grid.Row="0" Grid.Column="1" />

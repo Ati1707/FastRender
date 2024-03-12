@@ -8,6 +8,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using TimelineEntryControl;
 
 namespace FastRender
@@ -21,13 +22,28 @@ namespace FastRender
 		private bool isDragging;
 		private bool isDragCompleted;
 		private Point startPoint;
+		DispatcherTimer timer;
 		public MainWindow()
 		{
 			InitializeComponent();
 			Directory.CreateDirectory("Images");
 			Directory.CreateDirectory("Videos");
 			videoListBox.ItemsSource = VideoList;
+			timer = new DispatcherTimer();
+			timer.Interval = TimeSpan.FromMilliseconds(200);
+			timer.Tick += new EventHandler(timer_Tick);
 
+		}
+
+		private void timer_Tick(object sender, EventArgs e)
+		{
+			var mediaDuration = mediaElement.NaturalDuration.TimeSpan.TotalMilliseconds;
+			var mediaElapsedTime = mediaElement.Position.TotalMilliseconds;
+			timelineSlider.Value = (100 * mediaElapsedTime) / mediaDuration;
+			if(timelineSlider.Value == 100)
+			{
+				timer.Stop();
+			}
 		}
 		private void ListBox_PreviewDragEnter(object sender, DragEventArgs e)
 		{
@@ -152,11 +168,20 @@ namespace FastRender
 			TimeSpan ts = new TimeSpan(0, 0, 0, 0, SliderValue);
 			mediaElement.Position = ts;
 			isDragCompleted = false;
+			if(SliderValue != 100)
+			{
+				timer.Start();
+			}
 		}
 
 		private void timelineSlider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
 		{
 			SeekToMediaPosition();
+		}
+
+		private void mediaElement_MediaOpened(object sender, RoutedEventArgs e)
+		{
+			timer.Start();
 		}
 	}
 
