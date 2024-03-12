@@ -9,10 +9,12 @@ What needs to be done:
 - [x] Properly scale video editor when increasing/decreasing window size
 - [ ] Implement timeline
 - [ ] Implement the editor
-- [ ] Implement usable video manager component.
+- [x] Implement usable video manager component.
 - Right now you can only drag and drop your videos. Clicking or dragging loaded videos doesn't do anything yet.
 - [ ] Add hotkeys for the editor
 - [ ] More robust process for ffmpeg/ffmprobe binaries. Maybe even integrate libraries instead?
+- While working on the project I noticed that sometimes when I dragndrop a video it freezes the program.
+      Maybe ffmpeg or ffmprobe errors out need to investigate this.
 - [ ] Rewrite the image extractor part. Currently it gets the first frame of the video and stores it in a folder.
 
 This is how it currently looks like 03.12.2024:
