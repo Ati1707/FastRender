@@ -30,6 +30,8 @@ namespace FastRender
 		DispatcherTimer timer;
 		private double nextLeftPosition = 0;
 		private Border border = new Border();
+		private Dictionary<int, System.Windows.Point> videoPositionList = new Dictionary<int, System.Windows.Point>();
+		private int videoIndex = 0;
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -150,13 +152,6 @@ namespace FastRender
 			object data = e.Data.GetData(typeof(Video));
 			if (data != null)
 			{
-				// < Rectangle Grid.Column = "0" Grid.Row = "2" HorizontalAlignment = "Left" VerticalAlignment = "Bottom" Height = "22" Width = "3" Fill = "#FF2F2F2F" />
-				System.Windows.Shapes.Rectangle leftBorder = new System.Windows.Shapes.Rectangle();
-				System.Windows.Shapes.Rectangle rightBorder = new System.Windows.Shapes.Rectangle();
-				leftBorder.Width = 3;
-				rightBorder.Width = 3;
-				leftBorder.Fill = new BrushConverter().ConvertFrom("#FF2F2F2F") as System.Windows.Media.Brush;
-				rightBorder.Fill = new BrushConverter().ConvertFrom("#FF2F2F2F") as System.Windows.Media.Brush;
 				Video video = data as Video;
 				TimeSpan test = TimeSpan.Parse(video.VideoDuration);
 				System.Windows.Controls.Image thumbnail = new System.Windows.Controls.Image();
@@ -172,15 +167,13 @@ namespace FastRender
 				videoTitle.Foreground = new SolidColorBrush(Colors.Black);
 				videoTitle.TextAlignment = TextAlignment.Left;
 				DockPanel dockPanel = new DockPanel();
-				DockPanel.SetDock(leftBorder, Dock.Left);
-				//dockPanel.Children.Add(leftBorder);
-				DockPanel.SetDock(rightBorder, Dock.Right);
-				//dockPanel.Children.Add(rightBorder);
 				DockPanel.SetDock(videoTitle, Dock.Top);
 				dockPanel.Children.Add(videoTitle);
 				dockPanel.Children.Add(thumbnail);
-				rect.MouseLeftButtonDown += new MouseButtonEventHandler(videoPanel_MouseLeftButtonDown);
-				rect.MouseMove += new MouseEventHandler(videoPanel_PreviewMouseMove);
+				rect.PreviewMouseLeftButtonDown += new MouseButtonEventHandler(videoPanel_MouseLeftButtonDown);
+				rect.PreviewMouseMove += new MouseEventHandler(videoPanel_PreviewMouseMove);
+				rect.PreviewMouseLeftButtonUp += new MouseButtonEventHandler(videoPanel_MouseLeftButtonUp);
+
 				rect.Child = dockPanel;
 				Canvas.SetLeft(rect, nextLeftPosition);
 				videoGrid.Children.Add(rect);
@@ -189,32 +182,52 @@ namespace FastRender
 		}
 		private void videoPanel_PreviewMouseMove(object sender, MouseEventArgs e)
 		{
-			var currentPos = e.GetPosition(this);
+			var currentPos = e.GetPosition(videoGrid);
 			var delta = currentPos - startpos;
 			Border border = sender as Border;
-			if ((delta.Length > dragThreshold || isDraggingVideoPanel) && e.LeftButton == MouseButtonState.Pressed)
+			if (border == null || e.LeftButton != MouseButtonState.Pressed)
 			{
-				isDraggingVideoPanel = true;
-				if(currentPos.X - startpos.X >= 0)
-				{
-					Canvas.SetLeft(border, currentPos.X - startpos.X);
-				}
+				return;
 			}
+			var position = e.GetPosition(border);
+			Debug.WriteLine($"border Position:{position.X} Startpos:{startpos.X}");
+			Debug.WriteLine($"CurrentPOs:{currentPos.X}");
+			System.Windows.Point relativePoint = border.TransformToAncestor(videoGrid).Transform(new System.Windows.Point(0, 0));
+			if (delta.X <= -1)
+			{
+				Canvas.SetLeft(border, 0);
+				return;
+			}
+			Debug.WriteLine($"RelativePOint:{relativePoint.X}");
+			Canvas.SetLeft(border, currentPos.X - startpos.X);
+			border.CaptureMouse();
 		}
 		private void videoPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
+			border = sender as Border;
 			isDraggingVideoPanel = false;
-			startpos = e.GetPosition(this);
-			if (border != sender as Border)
+			if (!videoPositionList.ContainsKey(sender.GetHashCode()))
 			{
-				border.BorderBrush = new BrushConverter().ConvertFrom("#0099ff") as System.Windows.Media.Brush;
-				border = sender as Border;
-				border.BorderBrush = new BrushConverter().ConvertFrom("#ff3300") as System.Windows.Media.Brush;
+				startpos = e.GetPosition(border);
+				videoPositionList.Add(sender.GetHashCode(), startpos);
 			}
-
+			else
+			{
+				startpos = videoPositionList[sender.GetHashCode()];
+			}
+			border.BorderBrush = new BrushConverter().ConvertFrom("#ff3300") as System.Windows.Media.Brush;
 
 		}
-
+		private void videoPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			isDraggingVideoPanel = false;
+			if (border != null)
+			{
+				border.BorderBrush = new BrushConverter().ConvertFrom("#0099ff") as System.Windows.Media.Brush;
+			}
+			border.ReleaseMouseCapture();
+			border = null;
+		}
 
 		private void ChangeMediaVolume(object sender, RoutedPropertyChangedEventArgs<double> args)
 		{
