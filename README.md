@@ -3,11 +3,11 @@
 Not usable yet still work in progress.
 
 What is the purpose of this tool:  
-The main focus will be on rendering performance.
-The tool will be easy to use. The only functionality the editor should have is to trim videos and render whatever is in the editor.
-I might add an option to mute certain parts of the audio, but other than that the tool won't have any fancy effects.
-The tool should also be quick to start/use. The videos only load when you use the player or start rendering.
-Videos are not loaded when working in the editor (may change this behavior if the player is too slow to load the videos for the preview).
+The main focus will be on rendering performance.  
+The tool will be easy to use. The only functionality the editor should have is to trim videos and render whatever is in the editor.  
+I might add an option to mute certain parts of the audio, but other than that the tool won't have any fancy effects.  
+The tool should also be quick to start/use. The videos only load when you use the player or start rendering.  
+Videos are not loaded when working in the editor (may change this behavior if the player is too slow to load the videos for the preview).  
 
 This is how it currently looks like 03.12.2024:
 ![grafik](https://github.com/Ati1707/FastRender/assets/152104750/5a5e3b82-b31b-43d7-b466-c828383e0d1b)
