@@ -10,7 +10,9 @@ What needs to be done:
 - [x] Fix the weird gap there is between the media element and the right border
 - [x] Properly scale video editor when increasing/decreasing window size
 - [ ] Implement timeline
+- Should automatically expand to the right if there are more videos than space and allow the user to change the zoom should be able to edit videos frame by frame.
 - [ ] Implement the editor
+- For the editor the only thing thats left is adding hotkey to cut the videos and to stick with other videos if they are close to each other.
 - [x] Implement usable video manager component.
 - I consider this as almost done. Only thing that I need to fix is when you pause the video the seek to slider doesn't work properly.
 - [ ] Add hotkeys for the editor
