@@ -1,6 +1,6 @@
 # FastRender
 
-Not usable yet still work in progress.
+Not usable yet still work in progress. Started the project around mid february 2024.
 
 What is the purpose of this tool:  
 The main focus will be on rendering performance.  
