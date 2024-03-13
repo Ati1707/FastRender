@@ -22,6 +22,9 @@ namespace FastRender
 	{
 		public List<Video> VideoList = new List<Video>();
 		private bool isDragging;
+		private bool isDraggingVideoPanel;
+		private System.Windows.Point startpos;
+		private const double dragThreshold = 1.0;
 		private bool isDragCompleted;
 		private bool isMediaLoaded;
 		DispatcherTimer timer;
@@ -41,15 +44,16 @@ namespace FastRender
 
 		private void timer_Tick(object sender, EventArgs e)
 		{
-			if (isMediaLoaded) {
-			var mediaDuration = mediaElement.NaturalDuration.TimeSpan.TotalMilliseconds;
-			var mediaElapsedTime = mediaElement.Position.TotalMilliseconds;
-			timelineSlider.Value = (100 * mediaElapsedTime) / mediaDuration;
-			if(timelineSlider.Value == 100)
+			if (isMediaLoaded)
 			{
-				timer.Stop();
-				isMediaLoaded = false;
-			}
+				var mediaDuration = mediaElement.NaturalDuration.TimeSpan.TotalMilliseconds;
+				var mediaElapsedTime = mediaElement.Position.TotalMilliseconds;
+				timelineSlider.Value = (100 * mediaElapsedTime) / mediaDuration;
+				if (timelineSlider.Value == 100)
+				{
+					timer.Stop();
+					isMediaLoaded = false;
+				}
 			}
 		}
 		private void ListBox_PreviewDragEnter(object sender, DragEventArgs e)
@@ -162,7 +166,7 @@ namespace FastRender
 				rect.Width = test.Milliseconds;
 				rect.Background = new BrushConverter().ConvertFrom("#FF0E2137") as System.Windows.Media.Brush;
 				rect.BorderBrush = new BrushConverter().ConvertFrom("#0099ff") as System.Windows.Media.Brush;
-				rect.BorderThickness = new Thickness(1,1,1,1);
+				rect.BorderThickness = new Thickness(1, 1, 1, 1);
 				TextBlock videoTitle = new TextBlock();
 				videoTitle.Text = video.VideoTitle;
 				videoTitle.Foreground = new SolidColorBrush(Colors.Black);
@@ -176,21 +180,38 @@ namespace FastRender
 				dockPanel.Children.Add(videoTitle);
 				dockPanel.Children.Add(thumbnail);
 				rect.MouseLeftButtonDown += new MouseButtonEventHandler(videoPanel_MouseLeftButtonDown);
+				rect.MouseMove += new MouseEventHandler(videoPanel_PreviewMouseMove);
 				rect.Child = dockPanel;
 				Canvas.SetLeft(rect, nextLeftPosition);
 				videoGrid.Children.Add(rect);
 				nextLeftPosition += rect.Width;
 			}
 		}
+		private void videoPanel_PreviewMouseMove(object sender, MouseEventArgs e)
+		{
+			var currentPos = e.GetPosition(this);
+			var delta = currentPos - startpos;
+			Border border = sender as Border;
+			if ((delta.Length > dragThreshold || isDraggingVideoPanel) && e.LeftButton == MouseButtonState.Pressed)
+			{
+				isDraggingVideoPanel = true;
+				if(currentPos.X - startpos.X >= 0)
+				{
+					Canvas.SetLeft(border, currentPos.X - startpos.X);
+				}
+			}
+		}
 		private void videoPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if(border != sender as Border)
+			isDraggingVideoPanel = false;
+			startpos = e.GetPosition(this);
+			if (border != sender as Border)
 			{
 				border.BorderBrush = new BrushConverter().ConvertFrom("#0099ff") as System.Windows.Media.Brush;
 				border = sender as Border;
 				border.BorderBrush = new BrushConverter().ConvertFrom("#ff3300") as System.Windows.Media.Brush;
 			}
-			
+
 
 		}
 
@@ -215,7 +236,7 @@ namespace FastRender
 			TimeSpan ts = new TimeSpan(0, 0, 0, 0, SliderValue);
 			mediaElement.Position = ts;
 			isDragCompleted = false;
-			if(SliderValue != 100)
+			if (SliderValue != 100)
 			{
 				timer.Start();
 				isMediaLoaded = true;
