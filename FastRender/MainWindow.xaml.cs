@@ -30,7 +30,7 @@ namespace FastRender
 		DispatcherTimer timer;
 		private double nextLeftPosition = 0;
 		private Border border = new Border();
-		private Dictionary<int, System.Windows.Point> videoPositionList = new Dictionary<int, System.Windows.Point>();
+		private Dictionary<Border, System.Windows.Point> videoPositionList = new Dictionary<Border, System.Windows.Point>();
 		private int videoIndex = 0;
 		public MainWindow()
 		{
@@ -190,33 +190,117 @@ namespace FastRender
 				return;
 			}
 			var position = e.GetPosition(border);
-			Debug.WriteLine($"border Position:{position.X} Startpos:{startpos.X}");
-			Debug.WriteLine($"CurrentPOs:{currentPos.X}");
 			System.Windows.Point relativePoint = border.TransformToAncestor(videoGrid).Transform(new System.Windows.Point(0, 0));
 			if (delta.X <= -1)
 			{
 				Canvas.SetLeft(border, 0);
 				return;
 			}
-			Debug.WriteLine($"RelativePOint:{relativePoint.X}");
+			//Debug.WriteLine($"RelativePOint:{relativePoint.X}");
+			foreach (var item in videoPositionList)
+			{
+				var test = item.Key;
+				var borderRelativePoint = test.TransformToAncestor(videoGrid).Transform(new System.Windows.Point(0, 0));
+				var threshold = currentPos - borderRelativePoint;
+				Debug.WriteLine(threshold.X);
+				//Debug.WriteLine($"Border Point: {test.TransformToAncestor(videoGrid).Transform(new System.Windows.Point(0, 0))}");
+				//Debug.WriteLine($"Border width:{test.Width}");
+				if (relativePoint.X < borderRelativePoint.X + test.Width &&
+					relativePoint.X > borderRelativePoint.X
+					)
+				{
+					if (threshold.X-(border.Width/2) > 10 + test.Width)
+					{
+						Canvas.SetLeft(border, currentPos.X - startpos.X);
+					}
+					else
+					{
+						Canvas.SetLeft(border, borderRelativePoint.X + test.Width + 1);
+
+					}
+					border.CaptureMouse();
+					return;
+				}
+
+				if (relativePoint.X + border.Width > borderRelativePoint.X &&
+					relativePoint.X + border.Width < borderRelativePoint.X + test.Width)
+				{
+					if (threshold.X < -10)
+					{
+						Canvas.SetLeft(border, currentPos.X - startpos.X);
+					}
+					else
+					{
+						Canvas.SetLeft(border, borderRelativePoint.X - border.Width - 1);
+
+					}
+
+					border.CaptureMouse();
+					return;
+				}
+			}
 			Canvas.SetLeft(border, currentPos.X - startpos.X);
 			border.CaptureMouse();
+			//Debug.WriteLine($"border Position:{position.X} Startpos:{startpos.X}");
+			//Debug.WriteLine($"CurrentPOs:{currentPos.X}");
 		}
 		private void videoPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			border = sender as Border;
 			isDraggingVideoPanel = false;
-			if (!videoPositionList.ContainsKey(sender.GetHashCode()))
+			if (!videoPositionList.ContainsKey(border))
 			{
 				startpos = e.GetPosition(border);
-				videoPositionList.Add(sender.GetHashCode(), startpos);
+				videoPositionList.Add(border, startpos);
 			}
 			else
 			{
-				startpos = videoPositionList[sender.GetHashCode()];
+				startpos = videoPositionList[border];
 			}
 			border.BorderBrush = new BrushConverter().ConvertFrom("#ff3300") as System.Windows.Media.Brush;
 
+		}
+		private Boolean isBordersTouching(System.Windows.Point relativePoint, System.Windows.Point currentPos)
+		{
+			foreach (var item in videoPositionList)
+			{
+				var test = item.Key;
+				var borderRelativePoint = test.TransformToAncestor(videoGrid).Transform(new System.Windows.Point(0, 0));
+				var threshold = currentPos - borderRelativePoint;
+				if (relativePoint.X < borderRelativePoint.X + test.Width &&
+					relativePoint.X > borderRelativePoint.X
+					)
+				{
+					if (threshold.X > 10 + test.Width)
+					{
+						Canvas.SetLeft(border, currentPos.X - startpos.X);
+					}
+					else
+					{
+						Canvas.SetLeft(border, borderRelativePoint.X - 1);
+					}
+					border.CaptureMouse();
+					return true;
+				}
+
+				if (relativePoint.X + border.Width > borderRelativePoint.X &&
+					relativePoint.X + border.Width < borderRelativePoint.X + test.Width)
+				{
+					if (threshold.X < -10)
+					{
+						Canvas.SetLeft(border, currentPos.X - startpos.X);
+					}
+					else
+					{
+						Canvas.SetLeft(border, borderRelativePoint.X + test.Width + 1);
+					}
+
+					border.CaptureMouse();
+					return true;
+				}
+				return true;
+			}
+			return false;
 		}
 		private void videoPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{

@@ -41,6 +41,7 @@ internal static class VideoInformationExtractorHelper
 			Debug.WriteLine(processOutput);
 			videoDuration = processOutput.Trim();
 		}
+		p.WaitForExit();
 		return videoDuration;
 	}
 	private static String GetImagePath(Process p, string videoFilePath)
@@ -64,8 +65,10 @@ internal static class VideoInformationExtractorHelper
 
 		p.Start();
 		imagePath = Directory.GetCurrentDirectory() + "\\" + imagePath;
-		while (!File.Exists(imagePath)) ;
-		p.WaitForExit();
+		while (!File.Exists(imagePath))
+		{
+			p.WaitForExit();
+		}
 
 		return imagePath;
 	}
