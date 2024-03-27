@@ -182,6 +182,7 @@ namespace FastRender
 		}
 		private void videoPanel_PreviewMouseMove(object sender, MouseEventArgs e)
 		{
+			Boolean didTouch = false;
 			var currentPos = e.GetPosition(videoGrid);
 			var delta = currentPos - startpos;
 			Border border = sender as Border;
@@ -190,7 +191,7 @@ namespace FastRender
 				return;
 			}
 			var position = e.GetPosition(border);
-			System.Windows.Point relativePoint = border.TransformToAncestor(videoGrid).Transform(new System.Windows.Point(0, 0));
+			System.Windows.Point draggedBorder = border.TransformToAncestor(videoGrid).Transform(new System.Windows.Point(0, 0));
 			if (delta.X <= -1)
 			{
 				Canvas.SetLeft(border, 0);
@@ -205,42 +206,49 @@ namespace FastRender
 				Debug.WriteLine(threshold.X);
 				//Debug.WriteLine($"Border Point: {test.TransformToAncestor(videoGrid).Transform(new System.Windows.Point(0, 0))}");
 				//Debug.WriteLine($"Border width:{test.Width}");
-				if (relativePoint.X < borderRelativePoint.X + test.Width &&
-					relativePoint.X > borderRelativePoint.X
-					)
+				if (test != border)
 				{
-					if (threshold.X-(border.Width/2) > 10 + test.Width)
+					if ((borderRelativePoint.X - (draggedBorder.X + border.Width)) < 5 &&
+						(borderRelativePoint.X - (draggedBorder.X + border.Width)) > -5)
 					{
-						Canvas.SetLeft(border, currentPos.X - startpos.X);
+						if (threshold.X > -border.Width)
+						{
+							Canvas.SetLeft(border, borderRelativePoint.X - border.Width);
+							didTouch = true;
+						}
+						else {
+							Canvas.SetLeft(border, currentPos.X - startpos.X);
+						}
 					}
 					else
 					{
-						Canvas.SetLeft(border, borderRelativePoint.X + test.Width + 1);
-
-					}
-					border.CaptureMouse();
-					return;
-				}
-
-				if (relativePoint.X + border.Width > borderRelativePoint.X &&
-					relativePoint.X + border.Width < borderRelativePoint.X + test.Width)
-				{
-					if (threshold.X < -10)
-					{
 						Canvas.SetLeft(border, currentPos.X - startpos.X);
 					}
-					else
+					Debug.WriteLine($"Dragged Border X:{draggedBorder.X}");
+					Debug.WriteLine($"Border X:{borderRelativePoint.X}");
+					/*if (draggedBorder.X + border.Width > borderRelativePoint.X &&
+						draggedBorder.X + border.Width < borderRelativePoint.X + test.Width)
 					{
-						Canvas.SetLeft(border, borderRelativePoint.X - border.Width - 1);
+						if (threshold.X < -10)
+						{
+							//Canvas.SetLeft(border, currentPos.X - startpos.X);
+						}
+						else
+						{
+							//Canvas.SetLeft(border, borderRelativePoint.X - border.Width - 1);
 
-					}
+						}
 
-					border.CaptureMouse();
-					return;
+						border.CaptureMouse();
+						return;
+					}*/
 				}
 			}
-			Canvas.SetLeft(border, currentPos.X - startpos.X);
-			border.CaptureMouse();
+			if (!didTouch)
+			{
+				Canvas.SetLeft(border, currentPos.X - startpos.X);
+				border.CaptureMouse();
+			}
 			//Debug.WriteLine($"border Position:{position.X} Startpos:{startpos.X}");
 			//Debug.WriteLine($"CurrentPOs:{currentPos.X}");
 		}
@@ -309,8 +317,11 @@ namespace FastRender
 			{
 				border.BorderBrush = new BrushConverter().ConvertFrom("#0099ff") as System.Windows.Media.Brush;
 			}
-			border.ReleaseMouseCapture();
-			border = null;
+			if (border != null)
+			{
+				border.ReleaseMouseCapture();
+				border = null;
+			}
 		}
 
 		private void ChangeMediaVolume(object sender, RoutedPropertyChangedEventArgs<double> args)
