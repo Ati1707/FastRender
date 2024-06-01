@@ -1,17 +1,12 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using TimelineEntryControl;
-using static System.Net.WebRequestMethods;
 
 namespace FastRender
 {
@@ -20,11 +15,12 @@ namespace FastRender
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		public static readonly RoutedCommand SnappingCommand = new RoutedCommand();
 		public List<Video> VideoList = new List<Video>();
 		private bool isDragging;
 		private bool isDraggingVideoPanel;
+		private bool isSnippingEnabled = true;
 		private System.Windows.Point startpos;
-		private const double dragThreshold = 1.0;
 		private bool isDragCompleted;
 		private bool isMediaLoaded;
 		DispatcherTimer timer;
@@ -41,6 +37,7 @@ namespace FastRender
 			timer = new DispatcherTimer();
 			timer.Interval = TimeSpan.FromMilliseconds(200);
 			timer.Tick += new EventHandler(timer_Tick);
+			this.CommandBindings.Add(new CommandBinding(SnappingCommand, SnappingCommand_Executed));
 
 		}
 
@@ -182,75 +179,60 @@ namespace FastRender
 		}
 		private void videoPanel_PreviewMouseMove(object sender, MouseEventArgs e)
 		{
-			Boolean didTouch = false;
-			var currentPos = e.GetPosition(videoGrid);
-			var delta = currentPos - startpos;
-			Border border = sender as Border;
-			if (border == null || e.LeftButton != MouseButtonState.Pressed)
+			var draggedBorder = sender as Border;
+
+			if (draggedBorder == null || e.LeftButton != MouseButtonState.Pressed)
+				return;
+
+			var currentMousePosition = e.GetPosition(videoGrid);
+			var draggedBorderPosition = draggedBorder.TransformToAncestor(videoGrid).Transform(new Point(0, 0));
+			var deltaX = currentMousePosition.X - startpos.X;
+
+			if (deltaX <= -1)
 			{
+				Canvas.SetLeft(draggedBorder, 0);
 				return;
 			}
-			var position = e.GetPosition(border);
-			System.Windows.Point draggedBorder = border.TransformToAncestor(videoGrid).Transform(new System.Windows.Point(0, 0));
-			if (delta.X <= -1)
+
+			Canvas.SetLeft(draggedBorder, currentMousePosition.X - startpos.X);
+
+			bool isSnapped = false;
+			if (isSnippingEnabled)
 			{
-				Canvas.SetLeft(border, 0);
-				return;
-			}
-			//Debug.WriteLine($"RelativePOint:{relativePoint.X}");
-			foreach (var item in videoPositionList)
-			{
-				var test = item.Key;
-				var borderRelativePoint = test.TransformToAncestor(videoGrid).Transform(new System.Windows.Point(0, 0));
-				var threshold = currentPos - borderRelativePoint;
-				Debug.WriteLine(threshold.X);
-				//Debug.WriteLine($"Border Point: {test.TransformToAncestor(videoGrid).Transform(new System.Windows.Point(0, 0))}");
-				//Debug.WriteLine($"Border width:{test.Width}");
-				if (test != border)
+				foreach (var item in videoPositionList)
 				{
-					if ((borderRelativePoint.X - (draggedBorder.X + border.Width)) < 5 &&
-						(borderRelativePoint.X - (draggedBorder.X + border.Width)) > -5)
+					Border adjacentBorder = item.Key;
+					Point adjacentBorderPosition = adjacentBorder.TransformToAncestor(videoGrid).Transform(new Point(0, 0));
+					if (IsWithinLeftThreshold((draggedBorderPosition.X + draggedBorder.Width) - adjacentBorderPosition.X))
 					{
-						if (threshold.X > -border.Width)
-						{
-							Canvas.SetLeft(border, borderRelativePoint.X - border.Width);
-							didTouch = true;
-						}
-						else {
-							Canvas.SetLeft(border, currentPos.X - startpos.X);
-						}
-					}
-					else
-					{
-						Canvas.SetLeft(border, currentPos.X - startpos.X);
-					}
-					Debug.WriteLine($"Dragged Border X:{draggedBorder.X}");
-					Debug.WriteLine($"Border X:{borderRelativePoint.X}");
-					/*if (draggedBorder.X + border.Width > borderRelativePoint.X &&
-						draggedBorder.X + border.Width < borderRelativePoint.X + test.Width)
-					{
-						if (threshold.X < -10)
-						{
-							//Canvas.SetLeft(border, currentPos.X - startpos.X);
-						}
-						else
-						{
-							//Canvas.SetLeft(border, borderRelativePoint.X - border.Width - 1);
+						Canvas.SetLeft(draggedBorder, adjacentBorderPosition.X - draggedBorder.Width);
 
-						}
-
-						border.CaptureMouse();
-						return;
-					}*/
+						break;
+					}
+					if (IsWithinRightThreshold(adjacentBorderPosition.X + adjacentBorder.Width - draggedBorderPosition.X))
+					{
+						Canvas.SetLeft(draggedBorder, adjacentBorder.Width + adjacentBorderPosition.X);
+						break;
+					}
 				}
+				return;
 			}
-			if (!didTouch)
+
+			if (e.LeftButton != MouseButtonState.Pressed)
 			{
-				Canvas.SetLeft(border, currentPos.X - startpos.X);
-				border.CaptureMouse();
+				draggedBorder.ReleaseMouseCapture();
+				return;
 			}
-			//Debug.WriteLine($"border Position:{position.X} Startpos:{startpos.X}");
-			//Debug.WriteLine($"CurrentPOs:{currentPos.X}");
+			Canvas.SetLeft(draggedBorder, currentMousePosition.X - startpos.X);
+		}
+
+		private bool IsWithinLeftThreshold(double value)
+		{
+			return value >= -15 && value <= 15;
+		}
+		private bool IsWithinRightThreshold(double value)
+		{
+			return value >= -15 && value <= 15;
 		}
 		private void videoPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
@@ -267,48 +249,6 @@ namespace FastRender
 			}
 			border.BorderBrush = new BrushConverter().ConvertFrom("#ff3300") as System.Windows.Media.Brush;
 
-		}
-		private Boolean isBordersTouching(System.Windows.Point relativePoint, System.Windows.Point currentPos)
-		{
-			foreach (var item in videoPositionList)
-			{
-				var test = item.Key;
-				var borderRelativePoint = test.TransformToAncestor(videoGrid).Transform(new System.Windows.Point(0, 0));
-				var threshold = currentPos - borderRelativePoint;
-				if (relativePoint.X < borderRelativePoint.X + test.Width &&
-					relativePoint.X > borderRelativePoint.X
-					)
-				{
-					if (threshold.X > 10 + test.Width)
-					{
-						Canvas.SetLeft(border, currentPos.X - startpos.X);
-					}
-					else
-					{
-						Canvas.SetLeft(border, borderRelativePoint.X - 1);
-					}
-					border.CaptureMouse();
-					return true;
-				}
-
-				if (relativePoint.X + border.Width > borderRelativePoint.X &&
-					relativePoint.X + border.Width < borderRelativePoint.X + test.Width)
-				{
-					if (threshold.X < -10)
-					{
-						Canvas.SetLeft(border, currentPos.X - startpos.X);
-					}
-					else
-					{
-						Canvas.SetLeft(border, borderRelativePoint.X + test.Width + 1);
-					}
-
-					border.CaptureMouse();
-					return true;
-				}
-				return true;
-			}
-			return false;
 		}
 		private void videoPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
@@ -370,6 +310,18 @@ namespace FastRender
 		private void OnMouseDownPauseMedia(object sender, MouseButtonEventArgs e)
 		{
 			mediaElement.Pause();
+		}
+		private void SnappingCommand_Executed(object sender, RoutedEventArgs e)
+		{
+			if(isSnippingEnabled)
+			{
+				isSnippingEnabled = false;
+			}
+			else
+			{
+				isSnippingEnabled = true;
+			}
+
 		}
 	}
 

@@ -4,9 +4,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TimelineEntryControl"
+        xmlns:fastrender="clr-namespace:FastRender"
         Closing="Window_Closing"
         mc:Ignorable="d" x:Name="mainWindow"
         Title="FastRender" MinWidth="1000" MinHeight="600" Height="Auto" Width="Auto" Background="#31363b" >
+    <Window.InputBindings>
+        <KeyBinding Key="S" Command="{x:Static fastrender:MainWindow.SnappingCommand}"/>
+    </Window.InputBindings>
+
     <DockPanel LastChildFill="false">
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
