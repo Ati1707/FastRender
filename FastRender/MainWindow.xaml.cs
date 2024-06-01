@@ -18,7 +18,6 @@ namespace FastRender
 		public static readonly RoutedCommand SnappingCommand = new RoutedCommand();
 		public List<Video> VideoList = new List<Video>();
 		private bool isDragging;
-		private bool isDraggingVideoPanel;
 		private bool isSnippingEnabled = true;
 		private System.Windows.Point startpos;
 		private bool isDragCompleted;
@@ -196,7 +195,6 @@ namespace FastRender
 
 			Canvas.SetLeft(draggedBorder, currentMousePosition.X - startpos.X);
 
-			bool isSnapped = false;
 			if (isSnippingEnabled)
 			{
 				foreach (var item in videoPositionList)
@@ -217,13 +215,6 @@ namespace FastRender
 				}
 				return;
 			}
-
-			if (e.LeftButton != MouseButtonState.Pressed)
-			{
-				draggedBorder.ReleaseMouseCapture();
-				return;
-			}
-			Canvas.SetLeft(draggedBorder, currentMousePosition.X - startpos.X);
 		}
 
 		private bool IsWithinLeftThreshold(double value)
@@ -236,8 +227,14 @@ namespace FastRender
 		}
 		private void videoPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
+			if(border != null)
+			{
+				border.BorderBrush = new BrushConverter().ConvertFrom("#0099ff") as System.Windows.Media.Brush;
+				border.ReleaseMouseCapture();
+				border = null;
+
+			}
 			border = sender as Border;
-			isDraggingVideoPanel = false;
 			if (!videoPositionList.ContainsKey(border))
 			{
 				startpos = e.GetPosition(border);
@@ -248,20 +245,12 @@ namespace FastRender
 				startpos = videoPositionList[border];
 			}
 			border.BorderBrush = new BrushConverter().ConvertFrom("#ff3300") as System.Windows.Media.Brush;
+			border.CaptureMouse();
 
 		}
 		private void videoPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
-			isDraggingVideoPanel = false;
-			if (border != null)
-			{
-				border.BorderBrush = new BrushConverter().ConvertFrom("#0099ff") as System.Windows.Media.Brush;
-			}
-			if (border != null)
-			{
 				border.ReleaseMouseCapture();
-				border = null;
-			}
 		}
 
 		private void ChangeMediaVolume(object sender, RoutedPropertyChangedEventArgs<double> args)
