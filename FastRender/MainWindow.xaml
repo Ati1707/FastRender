@@ -4,6 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TimelineEntryControl"
+        xmlns:cursor="clr-namespace:FastRender"
         xmlns:fastrender="clr-namespace:FastRender"
         Closing="Window_Closing"
         mc:Ignorable="d" x:Name="mainWindow"
@@ -91,6 +92,7 @@
             <Border Grid.Row="2" Grid.Column="1" BorderThickness="1" BorderBrush="Black">
                 <Rectangle Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Height="Auto" Fill="#FF24282D"></Rectangle>
             </Border>
+            <cursor:TimeLineCursor Grid.RowSpan="3" Grid.Column="1" VerticalAlignment="Bottom"/>
         </Grid>
     </DockPanel>
 </Window>
