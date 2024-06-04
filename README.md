@@ -7,8 +7,9 @@ The main focus will be on rendering performance.
 The tool will be easy to use. The only functionality the editor should have is to trim videos and render whatever is in the editor.  
 I might add an option to mute certain parts of the audio, but other than that the tool won't have any fancy effects.  
 Videos will be only loaded on demand. That means only when using the player or starting the rendering process. This idea of mine should make it faster to work with the editor and keep the RAM usage low.
-If my thought process causes more problems than benefits I will change my decision
-This is how it currently looks like 03.12.2024:
+If my implementation of my thought process causes more problems than benefits I will change my decision
+
+Preview screenshot 03.12.2024:
 ![grafik](https://github.com/Ati1707/FastRender/assets/152104750/5a5e3b82-b31b-43d7-b466-c828383e0d1b)
 What needs to be done:
 - [x] Get video details properly(getting duration doesnt work on other formats other than mp4?)
@@ -28,6 +29,6 @@ What needs to be done:
       Maybe ffmpeg or ffmprobe errors out need to investigate this.
 - [ ] Rewrite the image extractor part. Currently it gets the first frame of the video and stores it in a folder.
 - [ ] Restyle a lot of stuff.
-- In early developments I will keep it simple because I rather have functional code instead of pretty controls.
+- In early developments I will keep it simple because I rather have functional code instead of pretty controls/UI.
 - [ ] Maybe rewrite to Avalonia?
 - I want to keep the editor windows only. I don't wanna switch to avalonia because of cross-platform support but rather because I like to use "cutting edge" frameworks.
